@@ -2,5 +2,5 @@ ChangeLog
 Escapes.pm
 MANIFEST
 Makefile.PL
-test.pl
+t/podesc.t
 README

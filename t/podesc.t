@@ -1,6 +1,6 @@
 # Before `make install' is performed this script should be runnable with
 # `make test'. After `make install' it should work as `perl test.pl'
-# Time-stamp: "2001-12-14 00:23:26 MST"
+# Time-stamp: "2002-08-27 19:57:42 MDT"
 
 use strict;
 use Test;
@@ -34,10 +34,10 @@ print "#\n#------------------------\n#\n";
 
 print "# 'A' tests...\n";
 ok e2char('65'), 'A';
-ok e2char('x41'), 'A';
-ok e2char('x041'), 'A';
-ok e2char('x0041'), 'A';
-ok e2char('x00041'), 'A';
+ok e2char('0x41'), 'A';
+ok e2char('0x041'), 'A';
+ok e2char('0x0041'), 'A';
+ok e2char('0x00041'), 'A';
 ok e2char('0101'), 'A';
 ok e2char('00101'), 'A';
 ok e2char('000101'), 'A';
@@ -50,12 +50,12 @@ ok e2char('074'), '<';
 ok e2char('0074'), '<';
 ok e2char('00074'), '<';
 ok e2char('000074'), '<';
-ok e2char('x3c'), '<';
-ok e2char('x3C'), '<';
-ok e2char('x03c'), '<';
-ok e2char('x003c'), '<';
-ok e2char('x0003c'), '<';
-ok e2char('x00003c'), '<';
+ok e2char('0x3c'), '<';
+ok e2char('0x3C'), '<';
+ok e2char('0x03c'), '<';
+ok e2char('0x003c'), '<';
+ok e2char('0x0003c'), '<';
+ok e2char('0x00003c'), '<';
 
 ok e2char('65') ne e2char('lt');
 
@@ -67,8 +67,8 @@ print "#    eacute is <", e2char('eacute'), "> which is code ",
 
 ok e2char('eacute'), e2char('233');
 ok e2char('eacute'), e2char('0351');
-ok e2char('eacute'), e2char('xe9');
-ok e2char('eacute'), e2char('xE9');
+ok e2char('eacute'), e2char('0xe9');
+ok e2char('eacute'), e2char('0xE9');
 
 print "# pi tests...\n";
 ok defined e2char('pi');
@@ -79,11 +79,11 @@ print "#    pi is <", e2char('pi'), "> which is code ",
 ok e2char('pi'), e2char('01700');
 ok e2char('pi'), e2char('001700');
 ok e2char('pi'), e2char('0001700');
-ok e2char('pi'), e2char('x3c0');
-ok e2char('pi'), e2char('x3C0');
-ok e2char('pi'), e2char('x03C0');
-ok e2char('pi'), e2char('x003C0');
-ok e2char('pi'), e2char('x0003C0');
+ok e2char('pi'), e2char('0x3c0');
+ok e2char('pi'), e2char('0x3C0');
+ok e2char('pi'), e2char('0x03C0');
+ok e2char('pi'), e2char('0x003C0');
+ok e2char('pi'), e2char('0x0003C0');
 
 
 print "# various hash tests...\n";

@@ -1,11 +1,11 @@
 
 require 5;
 #                        The documentation is at the end.
-# Time-stamp: "2001-12-14 00:23:18 MST"
+# Time-stamp: "2002-08-27 19:58:02 MDT"
 package Pod::Escapes;
 require Exporter;
 @ISA = ('Exporter');
-$VERSION = '1.02';
+$VERSION = '1.03';
 @EXPORT_OK = qw(
   %Code2USASCII
   %Name2character
@@ -44,7 +44,7 @@ sub e2char {
   # Convert to decimal:
   if($in =~ m/^(0[0-7]*)$/s ) {
     $in = oct $in;
-  } elsif($in =~ m/^x([0-9a-fA-F]+)$/s ) {
+  } elsif($in =~ m/^0x([0-9a-fA-F]+)$/s ) {
     $in = hex $1;
   } # else it's decimal, or named
 
@@ -86,7 +86,7 @@ sub e2charnum {
   # Convert to decimal:
   if($in =~ m/^(0[0-7]*)$/s ) {
     $in = oct $in;
-  } elsif($in =~ m/^x([0-9a-fA-F]+)$/s ) {
+  } elsif($in =~ m/^0x([0-9a-fA-F]+)$/s ) {
     $in = hex $1;
   } # else it's decimal, or named
 
@@ -563,8 +563,8 @@ exportable symbols.
 Given a name or number that could appear in a
 C<EE<lt>name_or_numE<gt>> sequence, this returns the string that
 it stands for.  For example, C<e2char('sol')>, C<e2char('47')>,
-C<e2char('x2F')>, and C<e2char('057')> all return "/",
-because C<EE<lt>solE<gt>>, C<EE<lt>47E<gt>>, C<EE<lt>x2fE<gt>>,
+C<e2char('0x2F')>, and C<e2char('057')> all return "/",
+because C<EE<lt>solE<gt>>, C<EE<lt>47E<gt>>, C<EE<lt>0x2fE<gt>>,
 and C<EE<lt>057E<gt>>, all mean "/".  If
 the name has no known value (as with a name of "qacute") or is
 syntactally invalid (as with a name of "1/4"), this returns undef.
@@ -575,8 +575,8 @@ Given a name or number that could appear in a
 C<EE<lt>name_or_numE<gt>> sequence, this returns the number of
 the Unicode character that this stands for.  For example,
 C<e2char('sol')>, C<e2char('47')>,
-C<e2char('x2F')>, and C<e2char('057')> all return 47,
-because C<EE<lt>solE<gt>>, C<EE<lt>47E<gt>>, C<EE<lt>x2fE<gt>>,
+C<e2char('0x2F')>, and C<e2char('057')> all return 47,
+because C<EE<lt>solE<gt>>, C<EE<lt>47E<gt>>, C<EE<lt>0x2fE<gt>>,
 and C<EE<lt>057E<gt>>, all mean "/", whose Unicode number is 47.  If
 the name has no known value (as with a name of "qacute") or is
 syntactally invalid (as with a name of "1/4"), this returns undef.
