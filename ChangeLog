@@ -1,5 +1,13 @@
 Revision history for Perl extension Pod::Escapes
-                                        Time-stamp: "2002-08-27 20:03:28 MDT"
+                                        Time-stamp: "2004-05-07 15:44:30 ADT"
+
+2004-05-07  Sean M. Burke  sburke@cpan.org
+
+	* Release 1.04 -- adding support for E<x123> as an alternate form
+	for E<0x123>.  Adding the function e2charnum nad the hash
+	%Name2character_number.
+
+	Tests rearranged, and new ones added.	
 
 2002-08-27  Sean M. Burke  sburke@cpan.org
 

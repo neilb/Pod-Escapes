@@ -1,16 +1,17 @@
-# Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl test.pl'
-# Time-stamp: "2002-08-27 19:57:42 MDT"
+
+# Time-stamp: "2004-05-07 15:43:11 ADT"
 
 use strict;
 use Test;
 
 my @them;
-BEGIN { plan('tests' => 59) };
+BEGIN { plan('tests' => 63) };
 BEGIN { print "# Perl version $] under $^O\n" }
 
 use Pod::Escapes qw(:ALL);
 ok 1;
+
+eval " binmode(STDOUT, ':utf8') ";
 
 print "# Pod::Escapes version $Pod::Escapes::VERSION\n";
 print "# I'm ", (chr(65) eq 'A') ? '' : 'not ', "in ASCII world.\n";
@@ -34,10 +35,10 @@ print "#\n#------------------------\n#\n";
 
 print "# 'A' tests...\n";
 ok e2char('65'), 'A';
-ok e2char('0x41'), 'A';
-ok e2char('0x041'), 'A';
-ok e2char('0x0041'), 'A';
-ok e2char('0x00041'), 'A';
+ok e2char('x41'), 'A';
+ok e2char('x041'), 'A';
+ok e2char('x0041'), 'A';
+ok e2char('x00041'), 'A';
 ok e2char('0101'), 'A';
 ok e2char('00101'), 'A';
 ok e2char('000101'), 'A';
@@ -50,6 +51,13 @@ ok e2char('074'), '<';
 ok e2char('0074'), '<';
 ok e2char('00074'), '<';
 ok e2char('000074'), '<';
+
+ok e2char('x3c'), '<';
+ok e2char('x3C'), '<';
+ok e2char('x03c'), '<';
+ok e2char('x003c'), '<';
+ok e2char('x0003c'), '<';
+ok e2char('x00003c'), '<';
 ok e2char('0x3c'), '<';
 ok e2char('0x3C'), '<';
 ok e2char('0x03c'), '<';
@@ -67,8 +75,8 @@ print "#    eacute is <", e2char('eacute'), "> which is code ",
 
 ok e2char('eacute'), e2char('233');
 ok e2char('eacute'), e2char('0351');
-ok e2char('eacute'), e2char('0xe9');
-ok e2char('eacute'), e2char('0xE9');
+ok e2char('eacute'), e2char('xe9');
+ok e2char('eacute'), e2char('xE9');
 
 print "# pi tests...\n";
 ok defined e2char('pi');
@@ -76,27 +84,22 @@ ok defined e2char('pi');
 print "#    pi is <", e2char('pi'), "> which is code ",
       ord(e2char('pi')), "\n";
 
+ok e2char('pi'), e2char('960');
 ok e2char('pi'), e2char('01700');
 ok e2char('pi'), e2char('001700');
 ok e2char('pi'), e2char('0001700');
-ok e2char('pi'), e2char('0x3c0');
-ok e2char('pi'), e2char('0x3C0');
-ok e2char('pi'), e2char('0x03C0');
-ok e2char('pi'), e2char('0x003C0');
-ok e2char('pi'), e2char('0x0003C0');
+ok e2char('pi'), e2char('x3c0');
+ok e2char('pi'), e2char('x3C0');
+ok e2char('pi'), e2char('x03C0');
+ok e2char('pi'), e2char('x003C0');
+ok e2char('pi'), e2char('x0003C0');
 
 
 print "# various hash tests...\n";
 
 ok scalar keys %Name2character;
 ok defined $Name2character{'eacute'};
-
-ok $Name2character_number{'eacute'}, 233;
-
-ok e2charnum('pi'), 960;
-
 ok $Name2character{'lt'} eq '<';
-ok $Name2character_number{'lt'}, 60;
 
 ok scalar keys %Latin1Code_to_fallback;
 ok defined $Latin1Code_to_fallback{233};
