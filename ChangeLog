@@ -1,6 +1,11 @@
 Revision history for Perl extension Pod::Escapes
-                                        Time-stamp: "2001-10-24 23:32:42 MDT"
+                                        Time-stamp: "2001-12-14 00:24:51 MST"
 
+2001-12-14  Sean M. Burke  sburke@cpan.org
+	
+	* Release 1.02 -- added %Name2character_number and e2charnum, at
+	the suggestion of Tim Jenness.
+	
 2001-10-24  Sean M. Burke  sburke@cpan.org
 
 	* Release 1.01 -- first release version

@@ -1,12 +1,12 @@
 # Before `make install' is performed this script should be runnable with
 # `make test'. After `make install' it should work as `perl test.pl'
-# Time-stamp: "2001-10-24 23:30:57 MDT"
+# Time-stamp: "2001-12-14 00:23:26 MST"
 
 use strict;
 use Test;
 
 my @them;
-BEGIN { plan('tests' => 57) };
+BEGIN { plan('tests' => 59) };
 BEGIN { print "# Perl version $] under $^O\n" }
 
 use Pod::Escapes qw(:ALL);
@@ -76,7 +76,6 @@ ok defined e2char('pi');
 print "#    pi is <", e2char('pi'), "> which is code ",
       ord(e2char('pi')), "\n";
 
-ok e2char('pi'), e2char('960');
 ok e2char('pi'), e2char('01700');
 ok e2char('pi'), e2char('001700');
 ok e2char('pi'), e2char('0001700');
@@ -91,7 +90,13 @@ print "# various hash tests...\n";
 
 ok scalar keys %Name2character;
 ok defined $Name2character{'eacute'};
+
+ok $Name2character_number{'eacute'}, 233;
+
+ok e2charnum('pi'), 960;
+
 ok $Name2character{'lt'} eq '<';
+ok $Name2character_number{'lt'}, 60;
 
 ok scalar keys %Latin1Code_to_fallback;
 ok defined $Latin1Code_to_fallback{233};

@@ -1,17 +1,19 @@
 
 require 5;
 #                        The documentation is at the end.
-# Time-stamp: "2001-10-24 23:20:49 MDT"
+# Time-stamp: "2001-12-14 00:23:18 MST"
 package Pod::Escapes;
 require Exporter;
 @ISA = ('Exporter');
-$VERSION = '1.01';
+$VERSION = '1.02';
 @EXPORT_OK = qw(
   %Code2USASCII
   %Name2character
+  %Name2character_number
   %Latin1Code_to_fallback
   %Latin1Char_to_fallback
   e2char
+  e2charnum
 );
 %EXPORT_TAGS = ('ALL' => \@EXPORT_OK);
 
@@ -21,13 +23,17 @@ use strict;
 use vars qw(
   %Code2USASCII
   %Name2character
+  %Name2character_number
   %Latin1Code_to_fallback
   %Latin1Char_to_fallback
   $FAR_CHAR
+  $FAR_CHAR_NUMBER
   $NOT_ASCII
 );
 
 $FAR_CHAR = "?" unless defined $FAR_CHAR;
+$FAR_CHAR_NUMBER = ord($FAR_CHAR) unless defined $FAR_CHAR_NUMBER;
+
 $NOT_ASCII = 'A' ne chr(65) unless defined $NOT_ASCII;
 
 #--------------------------------------------------------------------------
@@ -62,7 +68,7 @@ sub e2char {
   
   # Normal handling:
   if($in =~ m/^\d+$/s) {
-    if($in > 255 and $] < 5.007) { # can't be trusted with Unicode
+    if($] < 5.007  and  $in > 255) { # can't be trusted with Unicode
       return $FAR_CHAR;
     } else {
       return chr($in);
@@ -73,20 +79,40 @@ sub e2char {
 }
 
 #--------------------------------------------------------------------------
+sub e2charnum {
+  my $in = $_[0];
+  return undef unless defined $in and length $in;
+  
+  # Convert to decimal:
+  if($in =~ m/^(0[0-7]*)$/s ) {
+    $in = oct $in;
+  } elsif($in =~ m/^x([0-9a-fA-F]+)$/s ) {
+    $in = hex $1;
+  } # else it's decimal, or named
 
-%Name2character = (
+  if($in =~ m/^\d+$/s) {
+    return 0 + $in;
+  } else {
+    return $Name2character_number{$in}; # returns undef if unknown
+  }
+}
+
+#--------------------------------------------------------------------------
+
+%Name2character_number = (
  # General XML/XHTML:
- 'lt'   => '<',
- 'gt'   => '>',
- 'quot' => '"',
- 'amp'  => '&',
- 'apos' => "'",
+ 'lt'   => 60,
+ 'gt'   => 62,
+ 'quot' => 34,
+ 'amp'  => 38,
+ 'apos' => 39,
 
  # POD-specific:
- 'sol'    => '/',
- 'verbar' => '|',
- 'lchevron' => chr(171), # legacy for laquo
- 'rchevron' => chr(187), # legacy for raquo
+ 'sol'    => 47,
+ 'verbar' => 124,
+
+ 'lchevron' => 171, # legacy for laquo
+ 'rchevron' => 187, # legacy for raquo
 
  # Remember, grave looks like \ (as in virtu\)
  #           acute looks like / (as in re/sume/)
@@ -94,412 +120,281 @@ sub e2char {
  #           umlaut/dieresis looks like " (as in nai"ve, Chloe")
 
  # From the XHTML 1 .ent files:
- 'nbsp'     , chr(160),
- 'iexcl'    , chr(161),
- 'cent'     , chr(162),
- 'pound'    , chr(163),
- 'curren'   , chr(164),
- 'yen'      , chr(165),
- 'brvbar'   , chr(166),
- 'sect'     , chr(167),
- 'uml'      , chr(168),
- 'copy'     , chr(169),
- 'ordf'     , chr(170),
- 'laquo'    , chr(171),
- 'not'      , chr(172),
- 'shy'      , chr(173),
- 'reg'      , chr(174),
- 'macr'     , chr(175),
- 'deg'      , chr(176),
- 'plusmn'   , chr(177),
- 'sup2'     , chr(178),
- 'sup3'     , chr(179),
- 'acute'    , chr(180),
- 'micro'    , chr(181),
- 'para'     , chr(182),
- 'middot'   , chr(183),
- 'cedil'    , chr(184),
- 'sup1'     , chr(185),
- 'ordm'     , chr(186),
- 'raquo'    , chr(187),
- 'frac14'   , chr(188),
- 'frac12'   , chr(189),
- 'frac34'   , chr(190),
- 'iquest'   , chr(191),
- 'Agrave'   , chr(192),
- 'Aacute'   , chr(193),
- 'Acirc'    , chr(194),
- 'Atilde'   , chr(195),
- 'Auml'     , chr(196),
- 'Aring'    , chr(197),
- 'AElig'    , chr(198),
- 'Ccedil'   , chr(199),
- 'Egrave'   , chr(200),
- 'Eacute'   , chr(201),
- 'Ecirc'    , chr(202),
- 'Euml'     , chr(203),
- 'Igrave'   , chr(204),
- 'Iacute'   , chr(205),
- 'Icirc'    , chr(206),
- 'Iuml'     , chr(207),
- 'ETH'      , chr(208),
- 'Ntilde'   , chr(209),
- 'Ograve'   , chr(210),
- 'Oacute'   , chr(211),
- 'Ocirc'    , chr(212),
- 'Otilde'   , chr(213),
- 'Ouml'     , chr(214),
- 'times'    , chr(215),
- 'Oslash'   , chr(216),
- 'Ugrave'   , chr(217),
- 'Uacute'   , chr(218),
- 'Ucirc'    , chr(219),
- 'Uuml'     , chr(220),
- 'Yacute'   , chr(221),
- 'THORN'    , chr(222),
- 'szlig'    , chr(223),
- 'agrave'   , chr(224),
- 'aacute'   , chr(225),
- 'acirc'    , chr(226),
- 'atilde'   , chr(227),
- 'auml'     , chr(228),
- 'aring'    , chr(229),
- 'aelig'    , chr(230),
- 'ccedil'   , chr(231),
- 'egrave'   , chr(232),
- 'eacute'   , chr(233),
- 'ecirc'    , chr(234),
- 'euml'     , chr(235),
- 'igrave'   , chr(236),
- 'iacute'   , chr(237),
- 'icirc'    , chr(238),
- 'iuml'     , chr(239),
- 'eth'      , chr(240),
- 'ntilde'   , chr(241),
- 'ograve'   , chr(242),
- 'oacute'   , chr(243),
- 'ocirc'    , chr(244),
- 'otilde'   , chr(245),
- 'ouml'     , chr(246),
- 'divide'   , chr(247),
- 'oslash'   , chr(248),
- 'ugrave'   , chr(249),
- 'uacute'   , chr(250),
- 'ucirc'    , chr(251),
- 'uuml'     , chr(252),
- 'yacute'   , chr(253),
- 'thorn'    , chr(254),
- 'yuml'     , chr(255),
+ 'nbsp'     , 160,
+ 'iexcl'    , 161,
+ 'cent'     , 162,
+ 'pound'    , 163,
+ 'curren'   , 164,
+ 'yen'      , 165,
+ 'brvbar'   , 166,
+ 'sect'     , 167,
+ 'uml'      , 168,
+ 'copy'     , 169,
+ 'ordf'     , 170,
+ 'laquo'    , 171,
+ 'not'      , 172,
+ 'shy'      , 173,
+ 'reg'      , 174,
+ 'macr'     , 175,
+ 'deg'      , 176,
+ 'plusmn'   , 177,
+ 'sup2'     , 178,
+ 'sup3'     , 179,
+ 'acute'    , 180,
+ 'micro'    , 181,
+ 'para'     , 182,
+ 'middot'   , 183,
+ 'cedil'    , 184,
+ 'sup1'     , 185,
+ 'ordm'     , 186,
+ 'raquo'    , 187,
+ 'frac14'   , 188,
+ 'frac12'   , 189,
+ 'frac34'   , 190,
+ 'iquest'   , 191,
+ 'Agrave'   , 192,
+ 'Aacute'   , 193,
+ 'Acirc'    , 194,
+ 'Atilde'   , 195,
+ 'Auml'     , 196,
+ 'Aring'    , 197,
+ 'AElig'    , 198,
+ 'Ccedil'   , 199,
+ 'Egrave'   , 200,
+ 'Eacute'   , 201,
+ 'Ecirc'    , 202,
+ 'Euml'     , 203,
+ 'Igrave'   , 204,
+ 'Iacute'   , 205,
+ 'Icirc'    , 206,
+ 'Iuml'     , 207,
+ 'ETH'      , 208,
+ 'Ntilde'   , 209,
+ 'Ograve'   , 210,
+ 'Oacute'   , 211,
+ 'Ocirc'    , 212,
+ 'Otilde'   , 213,
+ 'Ouml'     , 214,
+ 'times'    , 215,
+ 'Oslash'   , 216,
+ 'Ugrave'   , 217,
+ 'Uacute'   , 218,
+ 'Ucirc'    , 219,
+ 'Uuml'     , 220,
+ 'Yacute'   , 221,
+ 'THORN'    , 222,
+ 'szlig'    , 223,
+ 'agrave'   , 224,
+ 'aacute'   , 225,
+ 'acirc'    , 226,
+ 'atilde'   , 227,
+ 'auml'     , 228,
+ 'aring'    , 229,
+ 'aelig'    , 230,
+ 'ccedil'   , 231,
+ 'egrave'   , 232,
+ 'eacute'   , 233,
+ 'ecirc'    , 234,
+ 'euml'     , 235,
+ 'igrave'   , 236,
+ 'iacute'   , 237,
+ 'icirc'    , 238,
+ 'iuml'     , 239,
+ 'eth'      , 240,
+ 'ntilde'   , 241,
+ 'ograve'   , 242,
+ 'oacute'   , 243,
+ 'ocirc'    , 244,
+ 'otilde'   , 245,
+ 'ouml'     , 246,
+ 'divide'   , 247,
+ 'oslash'   , 248,
+ 'ugrave'   , 249,
+ 'uacute'   , 250,
+ 'ucirc'    , 251,
+ 'uuml'     , 252,
+ 'yacute'   , 253,
+ 'thorn'    , 254,
+ 'yuml'     , 255,
 
- ($] >= 5.007) ? (
-   'fnof'     , chr(402),
-   'Alpha'    , chr(913),
-   'Beta'     , chr(914),
-   'Gamma'    , chr(915),
-   'Delta'    , chr(916),
-   'Epsilon'  , chr(917),
-   'Zeta'     , chr(918),
-   'Eta'      , chr(919),
-   'Theta'    , chr(920),
-   'Iota'     , chr(921),
-   'Kappa'    , chr(922),
-   'Lambda'   , chr(923),
-   'Mu'       , chr(924),
-   'Nu'       , chr(925),
-   'Xi'       , chr(926),
-   'Omicron'  , chr(927),
-   'Pi'       , chr(928),
-   'Rho'      , chr(929),
-   'Sigma'    , chr(931),
-   'Tau'      , chr(932),
-   'Upsilon'  , chr(933),
-   'Phi'      , chr(934),
-   'Chi'      , chr(935),
-   'Psi'      , chr(936),
-   'Omega'    , chr(937),
-   'alpha'    , chr(945),
-   'beta'     , chr(946),
-   'gamma'    , chr(947),
-   'delta'    , chr(948),
-   'epsilon'  , chr(949),
-   'zeta'     , chr(950),
-   'eta'      , chr(951),
-   'theta'    , chr(952),
-   'iota'     , chr(953),
-   'kappa'    , chr(954),
-   'lambda'   , chr(955),
-   'mu'       , chr(956),
-   'nu'       , chr(957),
-   'xi'       , chr(958),
-   'omicron'  , chr(959),
-   'pi'       , chr(960),
-   'rho'      , chr(961),
-   'sigmaf'   , chr(962),
-   'sigma'    , chr(963),
-   'tau'      , chr(964),
-   'upsilon'  , chr(965),
-   'phi'      , chr(966),
-   'chi'      , chr(967),
-   'psi'      , chr(968),
-   'omega'    , chr(969),
-   'thetasym' , chr(977),
-   'upsih'    , chr(978),
-   'piv'      , chr(982),
-   'bull'     , chr(8226),
-   'hellip'   , chr(8230),
-   'prime'    , chr(8242),
-   'Prime'    , chr(8243),
-   'oline'    , chr(8254),
-   'frasl'    , chr(8260),
-   'weierp'   , chr(8472),
-   'image'    , chr(8465),
-   'real'     , chr(8476),
-   'trade'    , chr(8482),
-   'alefsym'  , chr(8501),
-   'larr'     , chr(8592),
-   'uarr'     , chr(8593),
-   'rarr'     , chr(8594),
-   'darr'     , chr(8595),
-   'harr'     , chr(8596),
-   'crarr'    , chr(8629),
-   'lArr'     , chr(8656),
-   'uArr'     , chr(8657),
-   'rArr'     , chr(8658),
-   'dArr'     , chr(8659),
-   'hArr'     , chr(8660),
-   'forall'   , chr(8704),
-   'part'     , chr(8706),
-   'exist'    , chr(8707),
-   'empty'    , chr(8709),
-   'nabla'    , chr(8711),
-   'isin'     , chr(8712),
-   'notin'    , chr(8713),
-   'ni'       , chr(8715),
-   'prod'     , chr(8719),
-   'sum'      , chr(8721),
-   'minus'    , chr(8722),
-   'lowast'   , chr(8727),
-   'radic'    , chr(8730),
-   'prop'     , chr(8733),
-   'infin'    , chr(8734),
-   'ang'      , chr(8736),
-   'and'      , chr(8743),
-   'or'       , chr(8744),
-   'cap'      , chr(8745),
-   'cup'      , chr(8746),
-   'int'      , chr(8747),
-   'there4'   , chr(8756),
-   'sim'      , chr(8764),
-   'cong'     , chr(8773),
-   'asymp'    , chr(8776),
-   'ne'       , chr(8800),
-   'equiv'    , chr(8801),
-   'le'       , chr(8804),
-   'ge'       , chr(8805),
-   'sub'      , chr(8834),
-   'sup'      , chr(8835),
-   'nsub'     , chr(8836),
-   'sube'     , chr(8838),
-   'supe'     , chr(8839),
-   'oplus'    , chr(8853),
-   'otimes'   , chr(8855),
-   'perp'     , chr(8869),
-   'sdot'     , chr(8901),
-   'lceil'    , chr(8968),
-   'rceil'    , chr(8969),
-   'lfloor'   , chr(8970),
-   'rfloor'   , chr(8971),
-   'lang'     , chr(9001),
-   'rang'     , chr(9002),
-   'loz'      , chr(9674),
-   'spades'   , chr(9824),
-   'clubs'    , chr(9827),
-   'hearts'   , chr(9829),
-   'diams'    , chr(9830),
-   'OElig'    , chr(338),
-   'oelig'    , chr(339),
-   'Scaron'   , chr(352),
-   'scaron'   , chr(353),
-   'Yuml'     , chr(376),
-   'circ'     , chr(710),
-   'tilde'    , chr(732),
-   'ensp'     , chr(8194),
-   'emsp'     , chr(8195),
-   'thinsp'   , chr(8201),
-   'zwnj'     , chr(8204),
-   'zwj'      , chr(8205),
-   'lrm'      , chr(8206),
-   'rlm'      , chr(8207),
-   'ndash'    , chr(8211),
-   'mdash'    , chr(8212),
-   'lsquo'    , chr(8216),
-   'rsquo'    , chr(8217),
-   'sbquo'    , chr(8218),
-   'ldquo'    , chr(8220),
-   'rdquo'    , chr(8221),
-   'bdquo'    , chr(8222),
-   'dagger'   , chr(8224),
-   'Dagger'   , chr(8225),
-   'permil'   , chr(8240),
-   'lsaquo'   , chr(8249),
-   'rsaquo'   , chr(8250),
-   'euro'     , chr(8364),
- ) : (
-   # for people who don't have Unicode support 
-   'fnof'     , $FAR_CHAR,
-   'Alpha'    , $FAR_CHAR,
-   'Beta'     , $FAR_CHAR,
-   'Gamma'    , $FAR_CHAR,
-   'Delta'    , $FAR_CHAR,
-   'Epsilon'  , $FAR_CHAR,
-   'Zeta'     , $FAR_CHAR,
-   'Eta'      , $FAR_CHAR,
-   'Theta'    , $FAR_CHAR,
-   'Iota'     , $FAR_CHAR,
-   'Kappa'    , $FAR_CHAR,
-   'Lambda'   , $FAR_CHAR,
-   'Mu'       , $FAR_CHAR,
-   'Nu'       , $FAR_CHAR,
-   'Xi'       , $FAR_CHAR,
-   'Omicron'  , $FAR_CHAR,
-   'Pi'       , $FAR_CHAR,
-   'Rho'      , $FAR_CHAR,
-   'Sigma'    , $FAR_CHAR,
-   'Tau'      , $FAR_CHAR,
-   'Upsilon'  , $FAR_CHAR,
-   'Phi'      , $FAR_CHAR,
-   'Chi'      , $FAR_CHAR,
-   'Psi'      , $FAR_CHAR,
-   'Omega'    , $FAR_CHAR,
-   'alpha'    , $FAR_CHAR,
-   'beta'     , $FAR_CHAR,
-   'gamma'    , $FAR_CHAR,
-   'delta'    , $FAR_CHAR,
-   'epsilon'  , $FAR_CHAR,
-   'zeta'     , $FAR_CHAR,
-   'eta'      , $FAR_CHAR,
-   'theta'    , $FAR_CHAR,
-   'iota'     , $FAR_CHAR,
-   'kappa'    , $FAR_CHAR,
-   'lambda'   , $FAR_CHAR,
-   'mu'       , $FAR_CHAR,
-   'nu'       , $FAR_CHAR,
-   'xi'       , $FAR_CHAR,
-   'omicron'  , $FAR_CHAR,
-   'pi'       , $FAR_CHAR,
-   'rho'      , $FAR_CHAR,
-   'sigmaf'   , $FAR_CHAR,
-   'sigma'    , $FAR_CHAR,
-   'tau'      , $FAR_CHAR,
-   'upsilon'  , $FAR_CHAR,
-   'phi'      , $FAR_CHAR,
-   'chi'      , $FAR_CHAR,
-   'psi'      , $FAR_CHAR,
-   'omega'    , $FAR_CHAR,
-   'thetasym' , $FAR_CHAR,
-   'upsih'    , $FAR_CHAR,
-   'piv'      , $FAR_CHAR,
-   'bull'     , $FAR_CHAR,
-   'hellip'   , $FAR_CHAR,
-   'prime'    , $FAR_CHAR,
-   'Prime'    , $FAR_CHAR,
-   'oline'    , $FAR_CHAR,
-   'frasl'    , $FAR_CHAR,
-   'weierp'   , $FAR_CHAR,
-   'image'    , $FAR_CHAR,
-   'real'     , $FAR_CHAR,
-   'trade'    , $FAR_CHAR,
-   'alefsym'  , $FAR_CHAR,
-   'larr'     , $FAR_CHAR,
-   'uarr'     , $FAR_CHAR,
-   'rarr'     , $FAR_CHAR,
-   'darr'     , $FAR_CHAR,
-   'harr'     , $FAR_CHAR,
-   'crarr'    , $FAR_CHAR,
-   'lArr'     , $FAR_CHAR,
-   'uArr'     , $FAR_CHAR,
-   'rArr'     , $FAR_CHAR,
-   'dArr'     , $FAR_CHAR,
-   'hArr'     , $FAR_CHAR,
-   'forall'   , $FAR_CHAR,
-   'part'     , $FAR_CHAR,
-   'exist'    , $FAR_CHAR,
-   'empty'    , $FAR_CHAR,
-   'nabla'    , $FAR_CHAR,
-   'isin'     , $FAR_CHAR,
-   'notin'    , $FAR_CHAR,
-   'ni'       , $FAR_CHAR,
-   'prod'     , $FAR_CHAR,
-   'sum'      , $FAR_CHAR,
-   'minus'    , $FAR_CHAR,
-   'lowast'   , $FAR_CHAR,
-   'radic'    , $FAR_CHAR,
-   'prop'     , $FAR_CHAR,
-   'infin'    , $FAR_CHAR,
-   'ang'      , $FAR_CHAR,
-   'and'      , $FAR_CHAR,
-   'or'       , $FAR_CHAR,
-   'cap'      , $FAR_CHAR,
-   'cup'      , $FAR_CHAR,
-   'int'      , $FAR_CHAR,
-   'there4'   , $FAR_CHAR,
-   'sim'      , $FAR_CHAR,
-   'cong'     , $FAR_CHAR,
-   'asymp'    , $FAR_CHAR,
-   'ne'       , $FAR_CHAR,
-   'equiv'    , $FAR_CHAR,
-   'le'       , $FAR_CHAR,
-   'ge'       , $FAR_CHAR,
-   'sub'      , $FAR_CHAR,
-   'sup'      , $FAR_CHAR,
-   'nsub'     , $FAR_CHAR,
-   'sube'     , $FAR_CHAR,
-   'supe'     , $FAR_CHAR,
-   'oplus'    , $FAR_CHAR,
-   'otimes'   , $FAR_CHAR,
-   'perp'     , $FAR_CHAR,
-   'sdot'     , $FAR_CHAR,
-   'lceil'    , $FAR_CHAR,
-   'rceil'    , $FAR_CHAR,
-   'lfloor'   , $FAR_CHAR,
-   'rfloor'   , $FAR_CHAR,
-   'lang'     , $FAR_CHAR,
-   'rang'     , $FAR_CHAR,
-   'loz'      , $FAR_CHAR,
-   'spades'   , $FAR_CHAR,
-   'clubs'    , $FAR_CHAR,
-   'hearts'   , $FAR_CHAR,
-   'diams'    , $FAR_CHAR,
-   'OElig'    , $FAR_CHAR,
-   'oelig'    , $FAR_CHAR,
-   'Scaron'   , $FAR_CHAR,
-   'scaron'   , $FAR_CHAR,
-   'Yuml'     , $FAR_CHAR,
-   'circ'     , $FAR_CHAR,
-   'tilde'    , $FAR_CHAR,
-   'ensp'     , $FAR_CHAR,
-   'emsp'     , $FAR_CHAR,
-   'thinsp'   , $FAR_CHAR,
-   'zwnj'     , $FAR_CHAR,
-   'zwj'      , $FAR_CHAR,
-   'lrm'      , $FAR_CHAR,
-   'rlm'      , $FAR_CHAR,
-   'ndash'    , $FAR_CHAR,
-   'mdash'    , $FAR_CHAR,
-   'lsquo'    , $FAR_CHAR,
-   'rsquo'    , $FAR_CHAR,
-   'sbquo'    , $FAR_CHAR,
-   'ldquo'    , $FAR_CHAR,
-   'rdquo'    , $FAR_CHAR,
-   'bdquo'    , $FAR_CHAR,
-   'dagger'   , $FAR_CHAR,
-   'Dagger'   , $FAR_CHAR,
-   'permil'   , $FAR_CHAR,
-   'lsaquo'   , $FAR_CHAR,
-   'rsaquo'   , $FAR_CHAR,
-   'euro'     , $FAR_CHAR,
- )
+ 'fnof'     , 402,
+ 'Alpha'    , 913,
+ 'Beta'     , 914,
+ 'Gamma'    , 915,
+ 'Delta'    , 916,
+ 'Epsilon'  , 917,
+ 'Zeta'     , 918,
+ 'Eta'      , 919,
+ 'Theta'    , 920,
+ 'Iota'     , 921,
+ 'Kappa'    , 922,
+ 'Lambda'   , 923,
+ 'Mu'       , 924,
+ 'Nu'       , 925,
+ 'Xi'       , 926,
+ 'Omicron'  , 927,
+ 'Pi'       , 928,
+ 'Rho'      , 929,
+ 'Sigma'    , 931,
+ 'Tau'      , 932,
+ 'Upsilon'  , 933,
+ 'Phi'      , 934,
+ 'Chi'      , 935,
+ 'Psi'      , 936,
+ 'Omega'    , 937,
+ 'alpha'    , 945,
+ 'beta'     , 946,
+ 'gamma'    , 947,
+ 'delta'    , 948,
+ 'epsilon'  , 949,
+ 'zeta'     , 950,
+ 'eta'      , 951,
+ 'theta'    , 952,
+ 'iota'     , 953,
+ 'kappa'    , 954,
+ 'lambda'   , 955,
+ 'mu'       , 956,
+ 'nu'       , 957,
+ 'xi'       , 958,
+ 'omicron'  , 959,
+ 'pi'       , 960,
+ 'rho'      , 961,
+ 'sigmaf'   , 962,
+ 'sigma'    , 963,
+ 'tau'      , 964,
+ 'upsilon'  , 965,
+ 'phi'      , 966,
+ 'chi'      , 967,
+ 'psi'      , 968,
+ 'omega'    , 969,
+ 'thetasym' , 977,
+ 'upsih'    , 978,
+ 'piv'      , 982,
+ 'bull'     , 8226,
+ 'hellip'   , 8230,
+ 'prime'    , 8242,
+ 'Prime'    , 8243,
+ 'oline'    , 8254,
+ 'frasl'    , 8260,
+ 'weierp'   , 8472,
+ 'image'    , 8465,
+ 'real'     , 8476,
+ 'trade'    , 8482,
+ 'alefsym'  , 8501,
+ 'larr'     , 8592,
+ 'uarr'     , 8593,
+ 'rarr'     , 8594,
+ 'darr'     , 8595,
+ 'harr'     , 8596,
+ 'crarr'    , 8629,
+ 'lArr'     , 8656,
+ 'uArr'     , 8657,
+ 'rArr'     , 8658,
+ 'dArr'     , 8659,
+ 'hArr'     , 8660,
+ 'forall'   , 8704,
+ 'part'     , 8706,
+ 'exist'    , 8707,
+ 'empty'    , 8709,
+ 'nabla'    , 8711,
+ 'isin'     , 8712,
+ 'notin'    , 8713,
+ 'ni'       , 8715,
+ 'prod'     , 8719,
+ 'sum'      , 8721,
+ 'minus'    , 8722,
+ 'lowast'   , 8727,
+ 'radic'    , 8730,
+ 'prop'     , 8733,
+ 'infin'    , 8734,
+ 'ang'      , 8736,
+ 'and'      , 8743,
+ 'or'       , 8744,
+ 'cap'      , 8745,
+ 'cup'      , 8746,
+ 'int'      , 8747,
+ 'there4'   , 8756,
+ 'sim'      , 8764,
+ 'cong'     , 8773,
+ 'asymp'    , 8776,
+ 'ne'       , 8800,
+ 'equiv'    , 8801,
+ 'le'       , 8804,
+ 'ge'       , 8805,
+ 'sub'      , 8834,
+ 'sup'      , 8835,
+ 'nsub'     , 8836,
+ 'sube'     , 8838,
+ 'supe'     , 8839,
+ 'oplus'    , 8853,
+ 'otimes'   , 8855,
+ 'perp'     , 8869,
+ 'sdot'     , 8901,
+ 'lceil'    , 8968,
+ 'rceil'    , 8969,
+ 'lfloor'   , 8970,
+ 'rfloor'   , 8971,
+ 'lang'     , 9001,
+ 'rang'     , 9002,
+ 'loz'      , 9674,
+ 'spades'   , 9824,
+ 'clubs'    , 9827,
+ 'hearts'   , 9829,
+ 'diams'    , 9830,
+ 'OElig'    , 338,
+ 'oelig'    , 339,
+ 'Scaron'   , 352,
+ 'scaron'   , 353,
+ 'Yuml'     , 376,
+ 'circ'     , 710,
+ 'tilde'    , 732,
+ 'ensp'     , 8194,
+ 'emsp'     , 8195,
+ 'thinsp'   , 8201,
+ 'zwnj'     , 8204,
+ 'zwj'      , 8205,
+ 'lrm'      , 8206,
+ 'rlm'      , 8207,
+ 'ndash'    , 8211,
+ 'mdash'    , 8212,
+ 'lsquo'    , 8216,
+ 'rsquo'    , 8217,
+ 'sbquo'    , 8218,
+ 'ldquo'    , 8220,
+ 'rdquo'    , 8221,
+ 'bdquo'    , 8222,
+ 'dagger'   , 8224,
+ 'Dagger'   , 8225,
+ 'permil'   , 8240,
+ 'lsaquo'   , 8249,
+ 'rsaquo'   , 8250,
+ 'euro'     , 8364,
 );
+
+
+# Fill out %Name2character...
+{
+  %Name2character = ();
+  my($name, $number);
+  while( ($name, $number) = each %Name2character_number) {
+    if($] < 5.007  and  $number > 255) {
+      $Name2character{$name} = $FAR_CHAR;
+      # substitute for Unicode characters, for perls
+      #  that can't reliable handle them
+    } else {
+      $Name2character{$name} = chr $number;
+      # normal case
+    }
+  }
+  # So they resolve 'right' even in EBCDIC-land
+  $Name2character{'lt'  }   = '<';
+  $Name2character{'gt'  }   = '>';
+  $Name2character{'quot'}   = '"';
+  $Name2character{'amp' }   = '&';
+  $Name2character{'apos'}   = "'";
+  $Name2character{'sol' }   = '/';
+  $Name2character{'verbar'} = '|';
+}
 
 #--------------------------------------------------------------------------
 
@@ -674,10 +569,36 @@ and C<EE<lt>057E<gt>>, all mean "/".  If
 the name has no known value (as with a name of "qacute") or is
 syntactally invalid (as with a name of "1/4"), this returns undef.
 
+=item e2charnum($e_content)
+
+Given a name or number that could appear in a
+C<EE<lt>name_or_numE<gt>> sequence, this returns the number of
+the Unicode character that this stands for.  For example,
+C<e2char('sol')>, C<e2char('47')>,
+C<e2char('x2F')>, and C<e2char('057')> all return 47,
+because C<EE<lt>solE<gt>>, C<EE<lt>47E<gt>>, C<EE<lt>x2fE<gt>>,
+and C<EE<lt>057E<gt>>, all mean "/", whose Unicode number is 47.  If
+the name has no known value (as with a name of "qacute") or is
+syntactally invalid (as with a name of "1/4"), this returns undef.
+
 =item $Name2character{I<name>}
 
 Maps from names (as in C<EE<lt>I<name>E<gt>>) like "eacute" or "sol"
 to the string that each stands for.  Note that this does not
+include numerics (like "64" or "x981c").  Under old Perl versions
+(before 5.7) you get a "?" in place of characters whose Unicode
+value is over 255.
+
+=item $Name2character_number{I<name>}
+
+Maps from names (as in C<EE<lt>I<name>E<gt>>) like "eacute" or "sol"
+to the Unicode value that each stands for.  For example,
+C<$Name2character_number{'eacute'}> is 201, and
+C<$Name2character_number{'eacute'}> is 8364.  You get the correct
+Unicode value, regardless of the version of Perl you're using --
+which differs from C<%Name2character>'s behavior under pre-5.7 Perls.
+
+Note that this hash does not
 include numerics (like "64" or "x981c").
 
 =item $Latin1Code_to_fallback{I<integer>}
@@ -712,6 +633,11 @@ over 255 (like lambda or emdash) can't be conveyed.  This
 module does work under such early Perl versions, but in the
 place of each such character, you get a "?".  Latin-1
 characters (characters 160-255) are unaffected.
+
+Under EBCDIC platforms, C<e2char($n)> may not always be the
+same as C<chr(e2charnum($n))>, and ditto for
+C<$Name2character{$name}> and
+C<chr($Name2character_number{$name})>.
 
 =head1 SEE ALSO
 
