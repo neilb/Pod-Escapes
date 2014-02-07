@@ -567,7 +567,7 @@ C<e2char('0x2F')>, and C<e2char('057')> all return "/",
 because C<EE<lt>solE<gt>>, C<EE<lt>47E<gt>>, C<EE<lt>0x2fE<gt>>,
 and C<EE<lt>057E<gt>>, all mean "/".  If
 the name has no known value (as with a name of "qacute") or is
-syntactally invalid (as with a name of "1/4"), this returns undef.
+syntactically invalid (as with a name of "1/4"), this returns undef.
 
 =item e2charnum($e_content)
 
@@ -579,7 +579,7 @@ C<e2char('0x2F')>, and C<e2char('057')> all return 47,
 because C<EE<lt>solE<gt>>, C<EE<lt>47E<gt>>, C<EE<lt>0x2fE<gt>>,
 and C<EE<lt>057E<gt>>, all mean "/", whose Unicode number is 47.  If
 the name has no known value (as with a name of "qacute") or is
-syntactally invalid (as with a name of "1/4"), this returns undef.
+syntactically invalid (as with a name of "1/4"), this returns undef.
 
 =item $Name2character{I<name>}
 
