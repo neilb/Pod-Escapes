@@ -1,0 +1,29 @@
+Revision history for Perl module Pod::Escapes
+
+1.05 2014-02-07
+
+    * Renamed this file to Changes and reformatted as per CPAN::Changes::Spec
+
+1.04 2004-05-07 SBURKE
+
+	* adding support for E<x123> as an alternate form for E<0x123>.
+      Adding the function e2charnum nad the hash %Name2character_number.
+
+    * Tests rearranged, and new ones added.	
+
+1.03 2002-08-27 SBURKE
+
+	* previous version mistakenly thought that "x4f"
+	  was the syntax for hex escapes in Pod.  Perlpod says it's 0x4f, so
+	  Pod::Escapes has been changed to support this syntax instead
+	  (instead!).
+	
+1.02 2001-12-14 SBURKE
+	
+	* added %Name2character_number and e2charnum,
+      at the suggestion of Tim Jenness.
+	
+1.01 2001-10-24 SBURKE
+
+	* Release 1.01 -- first release version
+
