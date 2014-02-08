@@ -9,6 +9,7 @@ Revision history for Perl module Pod::Escapes
     * Renamed this file to Changes and reformatted as per CPAN::Changes::Spec
     * Deleted META.yml so MakeMaker will generate MYMETA.{yml,json}
     * Noted in pod that now being maintained by NEILB
+    * Added link to github repo in pod
 
 1.04 2004-05-07 SBURKE
 

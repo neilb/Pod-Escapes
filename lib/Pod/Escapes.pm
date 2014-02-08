@@ -647,6 +647,10 @@ L<perlpodspec|perlpodspec>
 
 L<Text::Unidecode|Text::Unidecode>
 
+=head1 REPOSITORY
+
+L<https://github.com/neilbowers/Pod-Escapes>
+
 =head1 COPYRIGHT AND DISCLAIMERS
 
 Copyright (c) 2001-2004 Sean M. Burke.  All rights reserved.
