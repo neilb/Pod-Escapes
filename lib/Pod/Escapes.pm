@@ -671,6 +671,8 @@ Currently (October 2001), that's these three:
 
 Sean M. Burke C<sburke@cpan.org>
 
+Now being maintained by Neil Bowers E<lt>neilb@cpan.orgE<gt>
+
 =cut
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
