@@ -1,6 +1,6 @@
 Revision history for Perl module Pod::Escapes
 
-1.04_01 2014-02-08
+1.04_01 2014-02-08 NEILB
 
     * Added PREREQ_PM, MIN_PERL_VERSION, LICENSE and repo to Makefile.PL
     * Made strict- and warnings-clean.
@@ -13,7 +13,7 @@ Revision history for Perl module Pod::Escapes
 1.04 2004-05-07 SBURKE
 
     * adding support for E<x123> as an alternate form for E<0x123>.
-      Adding the function e2charnum nad the hash %Name2character_number.
+      Adding the function e2charnum and the hash %Name2character_number.
 
     * Tests rearranged, and new ones added.
 
