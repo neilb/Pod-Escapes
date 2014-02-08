@@ -1,8 +1,20 @@
-
-require 5;
-#                        The documentation is at the end.
-# Time-stamp: "2004-05-07 15:31:25 ADT"
 package Pod::Escapes;
+use strict;
+use warnings;
+use 5.006;
+
+use vars qw(
+  %Code2USASCII
+  %Name2character
+  %Name2character_number
+  %Latin1Code_to_fallback
+  %Latin1Char_to_fallback
+  $FAR_CHAR
+  $FAR_CHAR_NUMBER
+  $NOT_ASCII
+  @ISA $VERSION @EXPORT_OK %EXPORT_TAGS
+);
+
 require Exporter;
 @ISA = ('Exporter');
 $VERSION = '1.04';
@@ -18,18 +30,6 @@ $VERSION = '1.04';
 %EXPORT_TAGS = ('ALL' => \@EXPORT_OK);
 
 #==========================================================================
-
-use strict;
-use vars qw(
-  %Code2USASCII
-  %Name2character
-  %Name2character_number
-  %Latin1Code_to_fallback
-  %Latin1Char_to_fallback
-  $FAR_CHAR
-  $FAR_CHAR_NUMBER
-  $NOT_ASCII
-);
 
 $FAR_CHAR = "?" unless defined $FAR_CHAR;
 $FAR_CHAR_NUMBER = ord($FAR_CHAR) unless defined $FAR_CHAR_NUMBER;
