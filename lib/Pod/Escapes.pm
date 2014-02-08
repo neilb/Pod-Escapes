@@ -676,7 +676,6 @@ Sean M. Burke C<sburke@cpan.org>
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # What I used for reading the XHTML .ent files:
 
-use strict;
 my(@norms, @good, @bad);
 my $dir = 'c:/sgml/docbook/';
 my %escapes;
