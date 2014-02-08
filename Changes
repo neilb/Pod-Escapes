@@ -6,6 +6,7 @@ Revision history for Perl module Pod::Escapes
     * Fixed syntax error in abstract: RT#49985 from JDHEDDEN
     * Fixed typo reported in RT#85374 by dsteinbrunner
     * Renamed this file to Changes and reformatted as per CPAN::Changes::Spec
+    * Deleted META.yml so MakeMaker will generate MYMETA.{yml,json}
 
 1.04 2004-05-07 SBURKE
 
