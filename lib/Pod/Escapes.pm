@@ -529,7 +529,7 @@ __END__
 
 =head1 NAME
 
-Pod::Escapes -- for resolving Pod EE<lt>...E<gt> sequences
+Pod::Escapes - for resolving Pod EE<lt>...E<gt> sequences
 
 =head1 SYNOPSIS
 
