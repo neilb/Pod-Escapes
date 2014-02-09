@@ -1,6 +1,6 @@
 Revision history for Perl module Pod::Escapes
 
-1.04_01 2014-02-08 NEILB
+1.05 2014-02-09 NEILB
 
     * Added PREREQ_PM, MIN_PERL_VERSION, LICENSE and repo to Makefile.PL
     * Made strict- and warnings-clean.
@@ -10,6 +10,11 @@ Revision history for Perl module Pod::Escapes
     * Deleted META.yml so MakeMaker will generate MYMETA.{yml,json}
     * Noted in pod that now being maintained by NEILB
     * Added link to github repo in pod
+
+1.04_01 2014-02-08 NEILB
+
+    * All the changes listed in 1.05 above were first done as a developer
+      release.
 
 1.04 2004-05-07 SBURKE
 

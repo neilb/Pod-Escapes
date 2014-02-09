@@ -17,7 +17,7 @@ use vars qw(
 
 require Exporter;
 @ISA = ('Exporter');
-$VERSION = '1.04_01';
+$VERSION = '1.05';
 @EXPORT_OK = qw(
   %Code2USASCII
   %Name2character
