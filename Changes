@@ -1,5 +1,10 @@
 Revision history for Perl module Pod::Escapes
 
+1.06 2014-02-14 NEILB
+
+    * e2charnum() was using \d but should use [0-9].
+      RT#70246 report and fix from MARCGREEN
+
 1.05 2014-02-09 NEILB
 
     * Added PREREQ_PM, MIN_PERL_VERSION, LICENSE and repo to Makefile.PL

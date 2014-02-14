@@ -17,7 +17,7 @@ use vars qw(
 
 require Exporter;
 @ISA = ('Exporter');
-$VERSION = '1.05';
+$VERSION = '1.06';
 @EXPORT_OK = qw(
   %Code2USASCII
   %Name2character
@@ -90,7 +90,7 @@ sub e2charnum {
     $in = hex $1;
   } # else it's decimal, or named
 
-  if($in =~ m/^\d+$/s) {
+  if($in =~ m/^[0-9]+$/s) {
     return 0 + $in;
   } else {
     return $Name2character_number{$in}; # returns undef if unknown
