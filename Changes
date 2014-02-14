@@ -2,8 +2,9 @@ Revision history for Perl module Pod::Escapes
 
 1.06 2014-02-14 NEILB
 
-    * e2charnum() was using \d but should use [0-9].
+    - e2charnum() was using \d but should use [0-9].
       RT#70246 report and fix from MARCGREEN
+    - Added a bunch of pod-related links to SEE ALSO
 
 1.05 2014-02-09 NEILB
 
