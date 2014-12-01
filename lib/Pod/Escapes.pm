@@ -380,7 +380,7 @@ sub e2charnum {
     if($] < 5.007  and  $number > 255) {
       $Name2character{$name} = $FAR_CHAR;
       # substitute for Unicode characters, for perls
-      #  that can't reliable handle them
+      #  that can't reliably handle them
     } else {
       $Name2character{$name} = chr $number;
       # normal case
