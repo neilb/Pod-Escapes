@@ -508,19 +508,27 @@ sub e2charnum {
       $Name2character{$name} = $FAR_CHAR;
       # substitute for Unicode characters, for perls
       #  that can't reliably handle them
+    } elsif ($] >= 5.007003) {
+      $Name2character{$name} = chr utf8::unicode_to_native($number);
+      # normal case for more recent Perls where we can translate from Unicode
+      # to the native character set.
+    }
+    elsif (exists $Code2USASCII{$number}) {
+      $Name2character{$name} = $Code2USASCII{$number};
+      # on older Perls, we can use the translations we have hard-coded in this
+      # file, but these don't include the non-ASCII-range characters
+    }
+    elsif ($NOT_ASCII && $number > 127 && $number < 256) {
+      # this range on old non-ASCII-platform perls is wrong
+      if (exists $Latin1Code_to_fallback{$number})  {
+        $Name2character{$name} = $Latin1Code_to_fallback{$number};
+      } else {
+        $Name2character{$name} = $FAR_CHAR;
+      }
     } else {
       $Name2character{$name} = chr $number;
-      # normal case
     }
   }
-  # So they resolve 'right' even in EBCDIC-land
-  $Name2character{'lt'  }   = '<';
-  $Name2character{'gt'  }   = '>';
-  $Name2character{'quot'}   = '"';
-  $Name2character{'amp' }   = '&';
-  $Name2character{'apos'}   = "'";
-  $Name2character{'sol' }   = '/';
-  $Name2character{'verbar'} = '|';
 }
 
 #--------------------------------------------------------------------------
