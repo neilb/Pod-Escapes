@@ -632,7 +632,12 @@ characters (characters 160-255) are unaffected.
 Under EBCDIC platforms, C<e2char($n)> may not always be the
 same as C<chr(e2charnum($n))>, and ditto for
 C<$Name2character{$name}> and
-C<chr($Name2character_number{$name})>.
+C<chr($Name2character_number{$name})>, because the strings are returned as
+native, and the numbers are returned as Unicode.
+However, for Perls starting with v5.8, C<e2char($n)> is the same as
+C<chr(utf8::unicode_to_native(e2charnum($n)))>, and ditto for
+C<$Name2character{$name}> and
+C<chr(utf8::unicode_to_native($Name2character_number{$name}))>.
 
 =head1 SEE ALSO
 
