@@ -48,28 +48,15 @@ sub e2char {
     $in = hex $1;
   } # else it's decimal, or named
 
-  if($NOT_ASCII) {
-    # We're in bizarro world of not-ASCII!
-    # Cope with US-ASCII codes, use fallbacks for Latin-1, or use FAR_CHAR.
-    unless($in =~ m/^\d+$/s) {
-      # It's a named character reference.  Get its numeric Unicode value.
-      $in = $Name2character{$in};
-      return undef unless defined $in;  # (if there's no such name)
-      $in = ord $in; # (All ents must be one character long.)
-        # ...So $in holds the char's US-ASCII numeric value, which we'll
-        #  now go get the local equivalent for.
-    }
-
-    # It's numeric, whether by origin or by mutation from a known name
-    return $Code2USASCII{$in} # so "65" => "A" everywhere
-        || $Latin1Code_to_fallback{$in} # Fallback.
-        || $FAR_CHAR; # Fall further back
-  }
-  
-  # Normal handling:
   if($in =~ m/^\d+$/s) {
     if($] < 5.007  and  $in > 255) { # can't be trusted with Unicode
       return $FAR_CHAR;
+    } elsif ($] >= 5.007003) {
+      return chr(utf8::unicode_to_native($in));
+    } elsif ($NOT_ASCII) {
+      return $Code2USASCII{$in} # so "65" => "A" everywhere
+             || $Latin1Code_to_fallback{$in} # Fallback.
+             || $FAR_CHAR; # Fall further back
     } else {
       return chr($in);
     }
