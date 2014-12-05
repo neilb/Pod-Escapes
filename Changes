@@ -1,5 +1,11 @@
 Revision history for Perl module Pod::Escapes
 
+1.06_01 2014-12-05 NEILB
+
+    - A bunch of changes from KHW++ for EBCDIC support.
+    - Doing a developer release first, to make sure everything's good
+      from CPAN Testers.
+
 1.06 2014-02-14 NEILB
 
     - e2charnum() was using \d but should use [0-9].
