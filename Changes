@@ -1,5 +1,14 @@
 Revision history for Perl module Pod::Escapes
 
+1.07 2014-12-09 NEILB
+
+    - All changes from Ken Williamson as part of EBCDIC work for 5.22
+    - Fix typo in comment
+    - Reorder structure definitions
+    - Fill %Name2character better for EBCDIC
+    - Generalize for EBCDIC
+    - doc clarification
+
 1.06_01 2014-12-05 NEILB
 
     - A bunch of changes from KHW++ for EBCDIC support.
