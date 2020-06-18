@@ -2,6 +2,7 @@
 # Time-stamp: "2004-04-27 19:53:22 ADT"
 
 use strict;
+use warnings;
 use Test;
 use utf8;
 
