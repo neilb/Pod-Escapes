@@ -600,7 +600,7 @@ include numerics (like "64" or "x981c").
 
 For numbers in the range 160 (0x00A0) to 255 (0x00FF), this maps
 from the character code for a Latin-1 character (like 233 for
-lowercase e-acute) to the US-ASCII character that best aproximates
+lowercase e-acute) to the US-ASCII character that best approximates
 it (like "e").  You may find this useful if you are rendering
 POD in a format that you think deals well only with US-ASCII
 characters.
