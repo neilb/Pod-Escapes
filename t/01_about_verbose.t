@@ -1,7 +1,6 @@
 use strict;
 use warnings;
-use Test;
-BEGIN {plan tests => 1};
+use Test::More tests => 1;
 
 use Pod::Escapes ();
 
