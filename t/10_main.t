@@ -1,21 +1,13 @@
-
-# Time-stamp: "2004-05-07 15:43:11 ADT"
-
 use strict;
+use warnings;
 use Test;
 
 my @them;
-BEGIN { plan('tests' => 63) };
-BEGIN { print "# Perl version $] under $^O\n" }
+BEGIN { plan('tests' => 62) };
 
 use Pod::Escapes qw(:ALL);
-ok 1;
 
 eval " binmode(STDOUT, ':utf8') ";
-
-print "# Pod::Escapes version $Pod::Escapes::VERSION\n";
-print "# I'm ", (chr(65) eq 'A') ? '' : 'not ', "in ASCII world.\n";
-print "#\n#------------------------\n#\n";
 
 foreach my $quotie (qw( \n \r \cm \cj \t \f \b \a \e )) {
   my $val = eval "\"$quotie\"";
