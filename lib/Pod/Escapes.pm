@@ -3,22 +3,16 @@ use strict;
 use warnings;
 use 5.006;
 
-use vars qw(
-  %Code2USASCII
-  %Name2character
-  %Name2character_number
-  %Latin1Code_to_fallback
-  %Latin1Char_to_fallback
-  $FAR_CHAR
-  $FAR_CHAR_NUMBER
-  $NOT_ASCII
-  @ISA $VERSION @EXPORT_OK %EXPORT_TAGS
-);
+our %Code2USASCII;
+our %Name2character;
+our %Name2character_number;
+our %Latin1Code_to_fallback;
+our %Latin1Char_to_fallback;
 
-require Exporter;
-@ISA = ('Exporter');
-$VERSION = '1.06_01';
-@EXPORT_OK = qw(
+use Exporter ();
+our @ISA = ('Exporter');
+our $VERSION = '1.06_01';
+our @EXPORT_OK = qw(
   %Code2USASCII
   %Name2character
   %Name2character_number
@@ -27,14 +21,14 @@ $VERSION = '1.06_01';
   e2char
   e2charnum
 );
-%EXPORT_TAGS = ('ALL' => \@EXPORT_OK);
+our %EXPORT_TAGS = ('ALL' => \@EXPORT_OK);
 
 #==========================================================================
 
-$FAR_CHAR = "?" unless defined $FAR_CHAR;
-$FAR_CHAR_NUMBER = ord($FAR_CHAR) unless defined $FAR_CHAR_NUMBER;
+our $FAR_CHAR = "?" unless defined $FAR_CHAR;
+our $FAR_CHAR_NUMBER = ord($FAR_CHAR) unless defined $FAR_CHAR_NUMBER;
 
-$NOT_ASCII = 'A' ne chr(65) unless defined $NOT_ASCII;
+our $NOT_ASCII = 'A' ne chr(65) unless defined $NOT_ASCII;
 
 #--------------------------------------------------------------------------
 sub e2char {

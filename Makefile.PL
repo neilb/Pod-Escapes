@@ -22,7 +22,6 @@ WriteMakefile(
         'Exporter' => 0,
         'strict'   => 0,
         'warnings' => 0,
-        'vars'     => 0,
     },
 
     ($mm_ver >= 6.31
