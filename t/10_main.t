@@ -110,5 +110,3 @@ ok defined $Latin1Char_to_fallback{chr(233)};
 ok scalar keys %Code2USASCII;
 ok defined $Code2USASCII{65};
 ok $Code2USASCII{65} eq 'A';
-
-

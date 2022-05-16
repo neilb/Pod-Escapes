@@ -39,7 +39,7 @@ use Pod::Escapes ();
     next if $this eq 'main'; # %main:: is %::
 
     #print "Peeking at $this => ${$this . '::VERSION'}\n";
-    
+
     if(defined ${$this . '::VERSION'} ) {
       $v{$this} = ${$this . '::VERSION'}
     } elsif(
@@ -84,4 +84,3 @@ foreach my $x (sort {lc($a) cmp lc($b)} keys %INC) {
 }
 
 ok 1;
-
