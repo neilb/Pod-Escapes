@@ -1,17 +1,8 @@
-
-require 5;
-# Time-stamp: "2004-04-27 19:44:49 ADT"
-
-# Summary of, well, things.
-
-use Test;
-BEGIN {plan tests => 2};
-
-ok 1;
+use strict;
+use warnings;
+use Test::More tests => 1;
 
 use Pod::Escapes ();
-
-#chdir "t" if -e "t";
 
 {
   my @out;
@@ -39,13 +30,14 @@ use Pod::Escapes ();
     next if $this eq 'main'; # %main:: is %::
 
     #print "Peeking at $this => ${$this . '::VERSION'}\n";
-    
+
+    no strict 'refs';
     if(defined ${$this . '::VERSION'} ) {
       $v{$this} = ${$this . '::VERSION'}
     } elsif(
-       defined *{$this . '::ISA'} or defined &{$this . '::import'}
-       or ($this ne '' and grep defined *{$_}{'CODE'}, values %{$this . "::"})
-       # If it has an ISA, an import, or any subs...
+      defined *{$this . '::ISA'} or defined &{$this . '::import'}
+      or ($this ne '' and grep defined *{$_}{'CODE'}, values %{$this . "::"})
+      # If it has an ISA, an import, or any subs...
     ) {
       # It's a class/module with no version.
       $v{$this} = undef;
@@ -53,7 +45,7 @@ use Pod::Escapes ();
       # It's probably an unpopulated package.
       ## $v{$this} = '...';
     }
-    
+
     $pref = length($this) ? "$this\::" : '';
     push @stack, map m/^(.+)::$/ ? "$pref$1" : (), keys %{$this . '::'};
     #print "Stack: @stack\n";
@@ -61,7 +53,7 @@ use Pod::Escapes ();
   push @out, " Modules in memory:\n";
   delete @v{'', '[none]'};
   foreach my $p (sort {lc($a) cmp lc($b)} keys %v) {
-    $indent = ' ' x (2 + ($p =~ tr/:/:/));
+    my $indent = ' ' x (2 + ($p =~ tr/:/:/));
     push @out,  '  ', $indent, $p, defined($v{$p}) ? " v$v{$p};\n" : ";\n";
   }
   push @out, sprintf "[at %s (local) / %s (GMT)]\n",
@@ -84,4 +76,3 @@ foreach my $x (sort {lc($a) cmp lc($b)} keys %INC) {
 }
 
 ok 1;
-

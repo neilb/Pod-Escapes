@@ -14,7 +14,7 @@ if ($mm_ver =~ /_/) {
 }
 
 WriteMakefile(
-    'NAME'	       => 'Pod::Escapes',
+    'NAME'         => 'Pod::Escapes',
     'VERSION_FROM' => 'lib/Pod/Escapes.pm',
     'dist'         => { COMPRESS => 'gzip -6f', SUFFIX => 'gz', },
 
@@ -22,7 +22,6 @@ WriteMakefile(
         'Exporter' => 0,
         'strict'   => 0,
         'warnings' => 0,
-        'vars'     => 0,
     },
 
     ($mm_ver >= 6.31

@@ -1,5 +1,12 @@
 Revision history for Perl module Pod::Escapes
 
+1.07_01 2022-06-24 NEILB
+    - whitespace cleanup
+    - normalise tests to use strict, warnings, and remove extraneous output
+    - switch from `use vars` to `our`
+    - switch from Test to Test::More
+    - all the above from HAARG++
+
 1.07 2014-12-09 NEILB
 
     - All changes from Ken Williamson as part of EBCDIC work for 5.22
